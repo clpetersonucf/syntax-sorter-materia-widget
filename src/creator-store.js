@@ -13,7 +13,9 @@ const init = {
 	showErrorModal: false,
 	errors: [],
 	selectedTokenIndex: -1,
+	selectedTokenPos: null,
 	selectedFakeoutIndex: -1,
+	selectedFakeoutPos: null,
 	title: 'New Syntax Sorter Widget',
 	items: [{
 		question: '',
@@ -119,6 +121,9 @@ const questionItemReducer = (items, action) => {
 				}
 				else return item
 			})
+		case 'pre_embed_token_audio':
+		case 'embed_token_audio':
+		case 'remove_audio_from_token':
 		case 'remove_token':
 			return items.map((item, index) => {
 				if (index == action.payload.questionIndex && action.payload.context == "fakeout") {
@@ -215,6 +220,40 @@ const phraseReducer = (phrase, action) => {
 				}
 				else return token
 			})
+		case 'pre_embed_token_audio':
+			return phrase.map((token, index) => {
+				if (index == action.payload.phraseIndex) {
+					return {
+						...token,
+						pendingAudio: true
+					}
+				}
+				else return token
+			})
+		case 'embed_token_audio':
+			return phrase.map((token, index) => {
+				if (index == action.payload.phraseIndex) {
+					let updated = {
+						...token,
+						audio: {
+							id: action.payload.media.id,
+							url: action.payload.media.url
+						}
+					}
+					delete updated.pendingAudio
+					return updated
+				}
+				else return token
+			})
+		case 'remove_audio_from_token':
+			return phrase.map((token, index) => {
+				if (index == action.payload.phraseIndex) {
+					let removed = { ...token }
+					delete removed.audio
+					return removed
+				}
+				else return token
+			})
 		default:
 			throw new Error('Phrase item reducer: this action type was not defined')
 	}
@@ -253,6 +292,40 @@ const fakeoutReducer = (fakes, action) => {
 						...token,
 						legend: null
 					}
+				}
+				else return token
+			})
+		case 'pre_embed_token_audio':
+			return fakes.map((token, index) => {
+				if (index == action.payload.fakeoutIndex) {
+					return {
+						...token,
+						pendingAudio: true
+					}
+				}
+				else return token
+			})
+		case 'embed_token_audio':
+			return fakes.map((token, index) => {
+				if (index == action.payload.fakeoutIndex) {
+					let updated = {
+						...token,
+						audio: {
+							id: action.payload.media.id,
+							url: action.payload.media.url
+						}
+					}
+					delete updated.pendingAudio
+					return updated
+				}
+				else return token
+			})
+		case 'remove_audio_from_token':
+			return fakes.map((token, index) => {
+				if (index == action.payload.fakeoutIndex) {
+					let removed = { ...token }
+					delete removed.audio
+					return removed
 				}
 				else return token
 			})
@@ -325,6 +398,9 @@ const StateProvider = ({ children }) => {
 			case 'update_attempts':
 			case 'update_hint':
 			case 'fakeout_input_to_token':
+			case 'pre_embed_token_audio':
+			case 'embed_token_audio':
+			case 'remove_audio_from_token':
 				return { ...state, items: questionItemReducer(state.items, action) }
 			case 'phrase_input_to_token':
 				return { ...state, items: questionItemReducer(state.items, action), showTokenTutorial: false }
@@ -338,9 +414,9 @@ const StateProvider = ({ children }) => {
 			case 'remove_token':
 				return { ...state, items: questionItemReducer(state.items, action), selectedFakeoutIndex: -1, selectedTokenIndex: -1 }
 			case 'toggle_token_select':
-				return { ...state, selectedTokenIndex: action.payload != state.selectedTokenIndex ? action.payload : -1 }
+				return { ...state, selectedTokenIndex: action.payload.index != state.selectedTokenIndex ? action.payload.index : -1, selectedTokenPos: action.payload.pos }
 			case 'toggle_fakeout_select':
-				return { ...state, selectedFakeoutIndex: action.payload != state.selectedFakeoutIndex ? action.payload : -1 }
+				return { ...state, selectedFakeoutIndex: action.payload.index != state.selectedFakeoutIndex ? action.payload.index : -1, selectedFakeoutPos: action.payload.pos }
 			case 'select_question':
 				return { ...state, currentIndex: action.payload, selectedTokenIndex: -1 }
 			case 'toggle_legend':

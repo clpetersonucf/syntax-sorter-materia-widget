@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef } from 'react'
 import { store } from '../../creator-store'
+import TokenAudioPlayer from './token-audio-player'
 
 const Token = (props) => {
-	const [hovering, setHovering] = useState(false)
+	const elementRef = useRef(null)
 	const manager = useContext(store)
 	const dispatch = manager.dispatch
 
@@ -17,11 +18,26 @@ const Token = (props) => {
 	}
 
 	const toggleTokenSelection = () => {
+		// midpoint position is passed to the store so the token selection arrow can slide to the selected token
+		let xMidpointPos = elementRef.current.getBoundingClientRect().x + (elementRef.current.getBoundingClientRect().width / 2)
+
 		if (props.context == "fakeout") {
-			dispatch({ type: 'toggle_fakeout_select', payload: props.index })
+			// calc to situationally adjust midpoint position to accommodate the expanded token wrapper width
+			if (manager.state.selectedFakeoutIndex != -1 && manager.state.selectedFakeoutIndex < props.index) xMidpointPos = xMidpointPos - 121
+
+			dispatch({ type: 'toggle_fakeout_select', payload: {
+				index: props.index,
+				pos: xMidpointPos
+			}})
 		}
 		else {
-			dispatch({ type: 'toggle_token_select', payload: props.index })
+			// calc to situationally adjust midpoint position to accommodate the expanded token wrapper width
+			if (manager.state.selectedTokenIndex != -1 && manager.state.selectedTokenIndex < props.index) xMidpointPos = xMidpointPos - 121
+
+			dispatch({ type: 'toggle_token_select', payload: {
+				index: props.index,
+				pos: xMidpointPos
+			}})
 		}
 	}
 
@@ -37,6 +53,33 @@ const Token = (props) => {
 		if (typeof r != "undefined") return ((r * 299) + (g * 587) + (b * 114)) / 1000;
 	}
 
+	const addAudio = (event) => {
+		event.stopPropagation() // prevent event propagation registering selection toggle
+		Materia.CreatorCore.showMediaImporter(['audio'])
+		dispatch({
+			type: 'pre_embed_token_audio',
+			payload: {
+				questionIndex: manager.state.currentIndex,
+				phraseIndex: props.index,
+				fakeoutIndex: props.index,
+				context: props.context
+			}
+		})
+	}
+
+	const removeAudio = (event) => {
+		event.stopPropagation() // prevent event propagation registering selection toggle
+		dispatch({
+			type: 'remove_audio_from_token',
+			payload: {
+				questionIndex: manager.state.currentIndex,
+				phraseIndex: props.index,
+				fakeoutIndex: props.index,
+				context: props.context
+			}
+		})
+	}
+
 	const deleteToken = () => {
 		dispatch({
 			type: 'remove_token', payload: {
@@ -50,22 +93,31 @@ const Token = (props) => {
 
 	let tokenColor = getLegendColor(props.type)
 
+	let audioRender = null
+	if (props.audio != null) {
+		audioRender = <TokenAudioPlayer audio={props.audio}></TokenAudioPlayer>
+	}
+
 	return (
-		<div className='token-mask'
-			onMouseEnter={() => { setHovering(true) }}
-			onMouseLeave={() => { setHovering(false) }}>
-			<span className={`token ${!props.type ? "unassigned" : ""} ${index == props.index ? "selected" : ""}`}
+		<div className={`token-wrapper ${index == props.index ? "expanded" : ""}`} onClick={toggleTokenSelection}>
+			<span
+				ref={elementRef}
+				className={`token ${!props.type ? "unassigned" : ""} ${index == props.index ? "selected" : ""}`}
 				style={{
 					background: tokenColor,
 					color: contrastCalc(tokenColor) > 160 ? '#000000' : '#ffffff'
-				}}
-				onClick={toggleTokenSelection}>
+				}}>
 				{decodeURIComponent(props.value)}
 			</span>
-			<div className={`close-btn ${hovering ? 'active' : ''}`}
-				onClick={deleteToken}>
-				<div className='icon-cross'></div>
-			</div>
+			<span className='token-expanded'>
+				{ audioRender != null ? audioRender : '' }
+				{ audioRender != null ? 
+					<button className='remove-audio' onClick={removeAudio}><span className='icon icon-audio-remove'></span></button>
+					:
+					<button className='add-audio' onClick={addAudio}><span className='icon icon-audio-add'></span></button>
+				}
+				<button className='delete' onClick={deleteToken}><span className='icon icon-cross'></span></button>
+			</span>
 		</div>
 	)
 }

@@ -63,6 +63,21 @@ $defaultPadding: 15px;
 .icon-arrow-down2:before {
 	content: "\ea3e";
 }
+.icon-audio-remove:before {
+	content: "\ea2a";
+}
+.icon-audio-add:before {
+	content: "\ea2b";
+}
+.icon-audio:before {
+	content: "\ea27";
+}
+.icon-play:before {
+	content: "\ea1c";
+}
+.icon-pause:before {
+	content: "\ea1d";
+}
 
 /* common styles */
 
@@ -120,7 +135,7 @@ span.strong {
 			width: 80%;
 			padding: 25px;
 
-			button {
+			button.modal-dismiss {
 				position: relative;
 				bottom: 100%;
 				left: 50%;
@@ -187,7 +202,7 @@ span.strong {
 			}
 		}
 
-		button {
+		button.modal-dismiss {
 			position: absolute;
 			display: block;
 			bottom: 15px;
@@ -487,7 +502,7 @@ span.strong {
 
 			&.unassigned {
 				color: #000;
-				border: solid 1px #f1814b;
+				border: solid 2px #f1814b;
 			}
 
 			&.selected {

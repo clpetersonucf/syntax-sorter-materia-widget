@@ -30,7 +30,7 @@ const CreatorErrorModal = (props) => {
 				<div className='error-holder'>
 					{validationErrors}
 				</div>
-				<button onClick={dismiss}>Okay</button>
+				<button className='modal-dismiss' onClick={dismiss}>Okay</button>
 			</div>
 			<div className='modal-bg'></div>
 		</div>

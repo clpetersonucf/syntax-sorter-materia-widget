@@ -132,6 +132,7 @@ div.startupTooltip {
 
 	section.phrase-builder {
 		position: relative;
+		padding-bottom: 16px;
 
 		header {
 			margin-bottom: 1em;
@@ -243,6 +244,18 @@ div.startupTooltip {
 
 			&.show {
 				display: block;
+			}
+
+			.token-selector-arrow {
+				position: absolute;
+				top: -16px;
+				width: 0;
+				height: 0;
+				left: 0;
+				border-left: 12px solid transparent;
+				border-right: 12px solid transparent;
+				border-bottom: 16px solid $darkBG;
+				transition: left 0.15s ease-out;
 			}
 
 			label {
@@ -457,14 +470,14 @@ section.fakeout-builder {
 		display: flex;
 		flex-wrap: wrap;
 		width: calc(100% - 20px);
-		padding: 10px 10px 36px 10px;
+		padding: 10px 10px 50px 10px;
 		max-height: 200px;
 		overflow-y: scroll;
 
 		border: solid 1px $lightBG;
 
 		&.small {
-			max-height: calc(125px - 46px);
+			max-height: calc(125px - 30px);
 		}
 
 		.token-input-container {
@@ -520,6 +533,7 @@ section.fakeout-builder {
 	}
 
 	.token-type-selector {
+		position: relative;
 		display: none;
 		width: calc(100% - 28px);
 
@@ -530,6 +544,18 @@ section.fakeout-builder {
 
 		&.show {
 			display: block;
+		}
+
+		.token-selector-arrow {
+			position: absolute;
+			top: -16px;
+			width: 0;
+			height: 0;
+			left: 0;
+			border-left: 12px solid transparent;
+			border-right: 12px solid transparent;
+			border-bottom: 16px solid $darkBG;
+			transition: left 0.15s ease-out;
 		}
 
 		header {
@@ -770,36 +796,70 @@ section.fakeout-builder {
 	}
 }
 
-.token-mask {
-	position: relative;
+section.phrase-builder, section.fakeout-builder {
+	.token-wrapper {
+		display: flex;
+		margin: 0 10px 10px 0;
 
-	.close-btn {
-		display: none;
-		position: absolute;
-		width: 17px;
-		height: 17px;
-		left: calc(100% - 20px);
-		top: -10px;
-		text-align: center;
-		justify-content: center;
-		align-items: center;
-		color: #fff;
-		background-color: #444444;
-		border-radius: 10px;
-		padding: 0;
-
-		div {
-			position: absolute;
-			font-size: 0.6em;
+		&.expanded {
+			.token-expanded {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				gap: 0.25em;
+			}
 		}
 
-		&:hover {
-			cursor: pointer;
-			background-color: #333333;
+		.token-expanded {
+			display: none;
+			position: relative;
+			z-index: 1;
+			left: -10px;
+			padding: 10px 14px 10px 24px;
+			border-top-right-radius: 8px;
+			border-bottom-right-radius: 8px;
+			background: $lightBG;
+
+			button {
+				position: static;
+				border: solid 1px $colorAccent;
+				border-radius: 0;
+				background: $colorBGSecondary;
+				font-size: 1.6em;
+
+				&.delete {
+					opacity: 0.5;
+					color: #fff;
+					background: #850000;
+					border-color: #850000;
+
+					&:hover {
+						opacity: 1;
+					}
+				}
+
+				.icon {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 1.25em;
+					height: 1.25em;
+					padding: 2px;
+					font-size: 0.8em;
+
+					&.icon-cross {
+						&:before {
+							transform: scale(0.8);
+						}
+					}
+				}
+			}
 		}
 
-		&.active {
-			display: flex;
+		.token {
+			z-index: 5;
+			position: relative;
+			margin: 0px;
 		}
 	}
 }

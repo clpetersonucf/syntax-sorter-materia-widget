@@ -76,7 +76,7 @@ const PhraseBuilder = (props) => {
 	}
 
 	let tokenList = phrase.map((term, index) => {
-		return <Token key={index} index={index} type={term.legend} value={term.value} context="phrase"></Token>
+		return <Token key={index} index={index} type={term.legend} value={term.value} context="phrase" audio={term.audio ?? null}></Token>
 	})
 
 	let legendSelection = manager.state.legend.map((term, index) => {
@@ -85,6 +85,8 @@ const PhraseBuilder = (props) => {
 			<span className="color-radio" style={{ background: term.color }}></span>{term.name.length > 0 ? term.name : 'Untitled Legend Item'}
 		</label>)
 	})
+
+	const tokenSelectorArrowPos = manager.state.selectedTokenPos - 100 // 100 offset represents distance between selector left edge and left edge of the window
 
 	return (
 		<section className="card phrase-builder">
@@ -100,6 +102,9 @@ const PhraseBuilder = (props) => {
 				</div>
 			</div>
 			<div className={`token-type-selector ${manager.state.selectedTokenIndex != -1 ? "show" : ""}`}>
+				<div className='token-selector-arrow' style={{
+					left: `${tokenSelectorArrowPos}px`
+				}}></div>
 				<header>Select the corresponding legend item for this token:</header>
 				<form id="tokenTypeSelection">
 					{legendSelection}

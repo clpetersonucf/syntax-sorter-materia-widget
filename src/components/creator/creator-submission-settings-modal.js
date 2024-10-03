@@ -35,7 +35,7 @@ const CreatorSubmissionSettingsModal = (props) => {
 					If enabled, students must respond to all questions before submission by sorting at least one token per question. Empty responses are not allowed.
 				</span>
 				
-				<button onClick={dismiss}>Okay</button>
+				<button className='modal-dismiss' onClick={dismiss}>Okay</button>
 			</div>
 			<div className='modal-bg'></div>
 		</div>

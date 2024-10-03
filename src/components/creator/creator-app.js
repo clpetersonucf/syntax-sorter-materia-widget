@@ -148,6 +148,44 @@ const CreatorApp = (props) => {
 		console.log("OK!")
 	}
 
+	props.callbacks.onMediaImportComplete = (media) => {
+		manager.state.items.forEach((item, index) => {
+			item.phrase.forEach((token, tokenIndex) => {
+				if (token.pendingAudio) {
+					dispatch({
+						type: 'embed_token_audio',
+						payload: {
+							questionIndex: index,
+							phraseIndex: tokenIndex,
+							context: 'phrase',
+							media: {
+								id: media[0].id,
+								url: Materia.CreatorCore.getMediaUrl(media[0].id)
+							}
+						}
+					})
+				}
+			})
+
+			item.fakes.forEach((token, tokenIndex) => {
+				if (token.pendingAudio) {
+					dispatch({
+						type: 'embed_token_audio',
+						payload: {
+							questionIndex: index,
+							fakeoutIndex: tokenIndex,
+							context: 'fakeout',
+							media: {
+								id: media[0].id,
+								url: Materia.CreatorCore.getMediaUrl(media[0].id)
+							}
+						}
+					})
+				}
+			})
+		})
+	}
+
 	const handleTitleUpdate = (event) => {
 		dispatch({ type: 'update_title', payload: event.target.value })
 	}

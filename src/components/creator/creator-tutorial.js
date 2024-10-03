@@ -27,7 +27,7 @@ const CreatorTutorial = (props) => {
 					<img className='right' src='assets/img/creator-tutorial-phrase.png' alt='Example screenshot of phrase assembly.' />
 				</div>
 				<p>4. You can optionally enable additional features, like allowing students <span className="strong">additional attempts</span> for specific questions, or create additional <span className="strong">"fake" tokens</span> that will appear alongside the real ones.</p>
-				<button onClick={dismiss}>Let's Go</button>
+				<button className='modal-dismiss' onClick={dismiss}>Let's Go</button>
 			</div>
 			<div className='modal-bg'></div>
 		</div>

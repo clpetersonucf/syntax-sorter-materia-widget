@@ -55,7 +55,7 @@ const CreatorHintsModal = (props) => {
 							onChange={handleHint} />
 					</span>
 				</span>
-				<button onClick={dismiss}>Okay</button>
+				<button className='modal-dismiss' onClick={dismiss}>Okay</button>
 			</div>
 			<div className='modal-bg'></div>
 		</div>

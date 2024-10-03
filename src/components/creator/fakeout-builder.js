@@ -9,9 +9,10 @@ const FakeoutBuilder = (props) => {
 
 	const currentLegend = (manager.state.selectedFakeoutIndex != -1 && manager.state?.items[manager.state.currentIndex]?.fakes[manager.state.selectedFakeoutIndex]?.legend != undefined) ? manager.state.items[manager.state.currentIndex].fakes[manager.state.selectedFakeoutIndex].legend : -1
 
+	const selectorElementRef = useRef(null)
 	const inputRef = useRef(null)
 
-	useEffect(() => {
+	useEffect(() => {``
 		if (manager.state.showFakeoutModal == false && inputRef.current?.value.length > 0) {
 			convertInputToToken(inputRef.current.value)
 			inputRef.current.value = ""
@@ -72,7 +73,7 @@ const FakeoutBuilder = (props) => {
 	}
 
 	let tokenList = manager.state.items[manager.state.currentIndex].fakes?.map((term, index) => {
-		return <Token key={index} index={index} type={term.legend} context="fakeout" value={term.value}></Token>
+		return <Token key={index} index={index} type={term.legend} context="fakeout" value={term.value} audio={term.audio ?? null}></Token>
 	})
 
 	let legendSelection = manager.state.legend.map((term, index) => {
@@ -82,6 +83,11 @@ const FakeoutBuilder = (props) => {
 		</label>)
 	})
 
+	let tokenSelectorArrowPos = manager.state.selectedFakeoutPos
+	if (selectorElementRef.current) {
+		tokenSelectorArrowPos -= selectorElementRef.current?.getBoundingClientRect().x != 0 ? selectorElementRef.current.getBoundingClientRect().x : 120
+	}
+
 	return (
 		<section className="fakeout-builder">
 			<div className={`token-container ${manager.state.selectedFakeoutIndex != -1 ? "small" : ""}`}>
@@ -90,7 +96,10 @@ const FakeoutBuilder = (props) => {
 					<input className="token-input" onKeyDown={handleTokenInput} placeholder="..." ref={inputRef}></input>
 				</div>
 			</div>
-			<div className={`token-type-selector ${manager.state.selectedFakeoutIndex != -1 ? "show" : ""}`}>
+			<div ref={selectorElementRef} className={`token-type-selector ${manager.state.selectedFakeoutIndex != -1 ? "show" : ""}`}>
+				<div className='token-selector-arrow' style={{
+					left: `${tokenSelectorArrowPos}px`
+				}}></div>
 				<header>What type of word is this?</header>
 				<form id="tokenTypeSelectionFake">
 					{legendSelection}

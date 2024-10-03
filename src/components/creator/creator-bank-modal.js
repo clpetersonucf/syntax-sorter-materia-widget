@@ -48,7 +48,7 @@ const CreatorBankModal = (props) => {
 						disabled={props.enableQuestionBank == false} />
 					<span>out of {props.questionCount}</span>
 				</span>
-				<button onClick={dismiss}>Okay</button>
+				<button className='modal-dismiss' onClick={dismiss}>Okay</button>
 			</div>
 			<div className='modal-bg'></div>
 		</div>
