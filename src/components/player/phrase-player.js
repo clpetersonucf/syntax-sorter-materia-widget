@@ -109,6 +109,7 @@ const PhrasePlayer = (props) => {
 		let dropTokenStatus = event.dataTransfer.getData("tokenStatus")
 		let dropTokenFakeout = (event.dataTransfer.getData("tokenFakeout") == "true") ? true : false
 		let dropTokenFocus = event.dataTransfer.getData("tokenFocus")
+		let dropTokenAudio = (event.dataTransfer.getData("tokenAudio") == "null") ? null : event.dataTransfer.getData("tokenAudio")
 
 		let index = 0
 
@@ -136,7 +137,8 @@ const PhrasePlayer = (props) => {
 						value: dropTokenName,
 						originIndex: parseInt(dropTokenPhraseIndex),
 						fakeout: dropTokenFakeout,
-						focus: dropTokenFocus
+						focus: dropTokenFocus,
+						audio: dropTokenAudio
 					}
 				})
 				break
@@ -152,7 +154,8 @@ const PhrasePlayer = (props) => {
 						value: dropTokenName,
 						phraseIndex: parseInt(dropTokenPhraseIndex),
 						fakeout: dropTokenFakeout,
-						focus: dropTokenFocus
+						focus: dropTokenFocus,
+						audio: dropTokenAudio
 					}
 				})
 
@@ -208,7 +211,8 @@ const PhrasePlayer = (props) => {
 			fakeout={token.fakeout}
 			dragEligible={!(props.attemptsUsed >= props.attemptLimit || props.responseState == 'correct')}
 			forceClearAdjacentTokens={forceClearAdjacentTokens}
-			focus={token.focus}>
+			focus={token.focus}
+			audio={token.audio}>
 		</Token>
 	})
 
@@ -225,7 +229,8 @@ const PhrasePlayer = (props) => {
 			status={token.status}
 			fakeout={token.fakeout}
 			dragEligible={!(props.attemptsUsed >= props.attemptLimit)}
-			focus={token.focus}>
+			focus={token.focus}
+			audio={token.audio}>
 		</Token>
 	})
 

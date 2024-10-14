@@ -46,8 +46,8 @@ const importFromQset = (qset) => {
 	return {
 		items: qset.items.map((item) => {
 
-			let fakes = item.options.fakes.map((token) => { return {...token, status: 'unsorted', fakeout: true, id: createTokenKey(), focus: false}})
-			let reals = item.answers[0].options.phrase.map((token) => { return {...token, status: 'unsorted', fakeout: false, id: createTokenKey(), focus: false} })
+			let fakes = item.options.fakes.map((token) => { return { ...token, status: 'unsorted', fakeout: true, id: createTokenKey(), focus: false, audio: token.audio?.id || null }})
+			let reals = item.answers[0].options.phrase.map((token) => { return {...token, status: 'unsorted', fakeout: false, id: createTokenKey(), focus: false, audio: token.audio?.id || null} })
 
 			return {
 				question: item.questions[0].text,
@@ -180,7 +180,8 @@ const tokenSortedPhraseReducer = (list, action) => {
 					status: 'sorted',
 					fakeout: action.payload.fakeout,
 					position: {},
-					arrangement: null
+					arrangement: null,
+					audio: action.payload.audio
 				},
 				...list.slice(action.payload.targetIndex)
 			]
@@ -209,7 +210,8 @@ const tokenSortedPhraseReducer = (list, action) => {
 					status: 'sorted',
 					fakeout: action.payload.fakeout,
 					position: {},
-					arrangement: null
+					arrangement: null,
+					audio: action.payload.audio
 				},
 				...stageOne.slice(target)
 			]
@@ -296,7 +298,8 @@ const tokenUnsortedPhraseReducer = (list, action) => {
 						legend: action.payload.legend,
 						value: action.payload.value,
 						status: 'unsorted',
-						fakeout: action.payload.fakeout
+						fakeout: action.payload.fakeout,
+						audio: action.payload.audio
 					}
 				]
 		case 'toggle_token_select':

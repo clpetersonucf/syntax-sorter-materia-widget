@@ -16,7 +16,7 @@ const TokenAudioPlayer = (props) => {
 	useEffect(() => {
 		if (props.audio) {
 			const audioObj = new Audio()
-			audioObj.src = props.audio.url
+			audioObj.src = Materia.CreatorCore.getMediaUrl(props.audio.id)
 			setAudio(audioObj)
 		}
 	},[props.audio])

@@ -36,6 +36,7 @@ const TokenDrawer = (props) => {
 		let dropTokenStatus = event.dataTransfer.getData("tokenStatus")
 		let dropTokenFakeout = (event.dataTransfer.getData("tokenFakeout") == "true") ? true : false
 		let dropTokenFocus = event.dataTransfer.getData("tokenFocus")
+		let dropTokenAudio = (event.dataTransfer.getData("tokenAudio") == "null") ? null : event.dataTransfer.getData("tokenAudio")
 
 		if (dropTokenStatus == "sorted")
 		{
@@ -47,7 +48,8 @@ const TokenDrawer = (props) => {
 				legend: dropTokenType,
 				value: dropTokenName,
 				id: dropTokenId,
-				focus: dropTokenFocus
+				focus: dropTokenFocus,
+				audio: dropTokenAudio
 			}})
 		}
 	}

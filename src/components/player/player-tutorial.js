@@ -40,7 +40,7 @@ const PlayerTutorial = (props) => {
 						<p>Some questions may have hints. Press <span className='strong'>H</span> to play the hint if it's available.</p>
 					</div>
 				</div>
-				<button onClick={toggle} id="tutorial-ready-btn">I'm Ready</button>
+				<button className='modal-dismiss' onClick={toggle} id="tutorial-ready-btn">I'm Ready</button>
 			</div>
 
 			<div className='modal-bg' onClick={toggle}>

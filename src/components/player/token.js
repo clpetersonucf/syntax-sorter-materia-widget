@@ -10,6 +10,23 @@ const Token = (props) => {
 	const coords = tokenRef.current?.getBoundingClientRect()
 
 	const [localState, setlocalState] = useState({ dragging: false, origin: null })
+	const [audio, setAudio] = useState(null)
+	const [playing, setAudioPlaying] = useState(false)
+
+	useEffect(() => {
+		if (props.audio) {
+			const audioObj = new Audio()
+			audioObj.src = Materia.Engine.getMediaUrl(props.audio)
+			setAudio(audioObj)
+		}
+	},[props.audio])
+
+	useEffect(() => {
+		if (playing != undefined && audio != null) {
+			if (playing) audio.play()
+			else audio.pause()
+		}
+	},[playing])
 
 	// update token position when element's x value changes
 	useEffect(() => {
@@ -46,22 +63,6 @@ const Token = (props) => {
 			}
 		})
 	}
-
-	// the above hook works MOST of the time, but certain events (token rearrange) clear this token's position information in the store, and the hook doesn't fire
-	// manually update the position in cases where the position value does not get updated after being cleared
-	// useEffect( () => {
-	// 	if (props.status == 'sorted' && !props.position.x && coords) {
-	// 		dispatch({type:'token_update_position',payload: {
-	// 			questionIndex: state.currentIndex,
-	// 			tokenIndex: props.index,
-	// 			x: coords.x,
-	// 			y: coords.y + coords.height/2,
-	// 			width: coords.width
-	// 		}})
-
-	// 		props.forceClearAdjacentTokens()
-	// 	}
-	// }, [props.position])
 
 	// a token was sorted or rearranged, prompting the reqPositionUpdate flag to update for all sorted tokens. This forces them to update their position information
 	// in scenarios where it wouldn't otherwise get updated
@@ -107,6 +108,7 @@ const Token = (props) => {
 		event.dataTransfer.setData("tokenPhraseIndex", props.index)
 		event.dataTransfer.setData("tokenStatus", props.status)
 		event.dataTransfer.setData("tokenId", props.id)
+		event.dataTransfer.setData("tokenAudio", props.audio)
 
 		setTimeout(() => {
 			setlocalState(localState => ({ ...localState, dragging: true }))
@@ -314,13 +316,21 @@ const Token = (props) => {
 		}
 	}
 
-	// let tokenColor = getLegendColor(props.type)
+	const toggleTokenAudio = (event) => {
+		event.stopPropagation()
+		setAudioPlaying(!playing)
+	}
+
+	let tokenAudioButton = null
+	if (props.audio) {
+		tokenAudioButton = <button className='token-audio-toggle' onClick={toggleTokenAudio}><span className='icon icon-play'></span></button>
+	}
 
 	// Word value (optional), legend name, position, sorted or unsorted
 	let ariaLabel = (props.pref == 'word' ? `${props.value}, type: ${props.legend}, ` : props.legend + ', ') + (props.status == "sorted" ? `sorted in position ${props.index + 1} ` : props.status);
 
 	return (
-		<button className={`token ${localState.dragging ? 'dragging' : ''} ${props.arrangement == 'left' ? 'is-left' : ''} ${props.arrangement == 'right' ? 'is-right' : ''}`}
+		<div className={`token ${localState.dragging ? 'dragging' : ''} ${props.arrangement == 'left' ? 'is-left' : ''} ${props.arrangement == 'right' ? 'is-right' : ''}`}
 			style={{
 				background: props.color,
 				color: tokenTextColorContrast > 160 ? '#000000' : '#ffffff',
@@ -338,7 +348,8 @@ const Token = (props) => {
 			aria-label={ariaLabel}
 			>
 			{props.pref == 'word' ? props.value : props.legend}
-		</button>
+			{tokenAudioButton}
+		</div>
 	)
 }
 

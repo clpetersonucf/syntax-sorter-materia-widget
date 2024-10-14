@@ -132,7 +132,6 @@ div.startupTooltip {
 
 	section.phrase-builder {
 		position: relative;
-		padding-bottom: 16px;
 
 		header {
 			margin-bottom: 1em;
@@ -827,6 +826,10 @@ section.phrase-builder, section.fakeout-builder {
 				background: $colorBGSecondary;
 				font-size: 1.6em;
 
+				&:hover {
+					background: $colorAccentHover;
+				}
+
 				&.delete {
 					opacity: 0.5;
 					color: #fff;
@@ -835,6 +838,7 @@ section.phrase-builder, section.fakeout-builder {
 
 					&:hover {
 						opacity: 1;
+						background: #850000;
 					}
 				}
 

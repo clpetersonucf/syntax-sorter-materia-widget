@@ -13,6 +13,7 @@ const PlayerApp = (props) => {
 
 	useEffect(() => {
 		if (state.requireInit) {
+			console.log(props.qset)
 			dispatch({
 				type: 'init', payload: {
 					qset: props.qset,
